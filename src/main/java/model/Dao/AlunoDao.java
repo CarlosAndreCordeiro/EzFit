@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package model.Dao;
 
-package br.edu.ifpe.ezfit;
+import model.Aluno;
 
 /**
  *
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
-public class Aluno {
 
-    
-    
-    
-    
-    
+
+public interface AlunoDao extends DaoGenerico<Aluno>{
+  
+    public boolean logarAluno(String login,String senha); 
+    public Aluno recuperarCpf(String cpf);
 }
