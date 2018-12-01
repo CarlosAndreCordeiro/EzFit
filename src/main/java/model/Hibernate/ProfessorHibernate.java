@@ -4,78 +4,67 @@
  * and open the template in the editor.
  */
 
-package model.hibernate;
+package model.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import model.Aluno;
-import model.Dao.AlunoDao;
+import model.DAO.ProfessorDao;
+import model.Professor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-
-
 /**
  *
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
-public class AlunoHibernate implements AlunoDao {
 
-    private EntityManager em;
-    private SessionFactory sessions;
-    private static AlunoHibernate instance = null;
 
-    public static AlunoHibernate getInstance() {
+public class ProfessorHibernate implements ProfessorDao {
 
+    private final SessionFactory sessions;
+    private static ProfessorHibernate instance = null;
+
+    public static ProfessorHibernate getInstance() {
         if (instance == null) {
-            instance = new AlunoHibernate();
+            instance = new ProfessorHibernate();
         }
-
         return instance;
     }
 
     @Override
-    public boolean logarAluno(String login, String senha) {
+    public boolean logarProfessor(String login, String senha) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
     }
 
-    public AlunoHibernate() {
-
+    public ProfessorHibernate() {
         Configuration cfg = new Configuration().configure();
         this.sessions = cfg.buildSessionFactory();
     }
 
     @Override
-    public void adiciona(Aluno aluno) {
+    public void adiciona(Professor professor) {
         Session session = this.sessions.openSession();
         Transaction t = session.beginTransaction();
 
         try {
-            session.persist(aluno);
+            session.persist(professor);
             session.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao adicionar o aluno!!");
+            System.out.println("Erro ao alterar Professor");
             t.rollback();
-            e.printStackTrace();
         } finally {
             session.close();
         }
     }
 
     @Override
-    public Aluno recuperar(int codigo) {
+    public Professor recuperar(int codigo) {
         Session session = this.sessions.openSession();
         try {
-
-            return (Aluno) session.getSession().createQuery("From Aluno Where codigo=" + codigo).getResultList().get(0);
-        }catch(Exception e){
-            System.out.println("Erro ao recuperar aluno pelo codigo!!");
-            return null;
+            return (Professor) session.getSession().createQuery("From Professor Where codigo=" + codigo).getResultList().get(0);
         } finally {
             //Fechamos a sessão
             session.close();
@@ -83,34 +72,16 @@ public class AlunoHibernate implements AlunoDao {
     }
 
     @Override
-    public void alterar(Aluno aluno) {
+    public void alterar(Professor professor) {
 
         Session session = this.sessions.openSession();
         Transaction t = session.beginTransaction();
 
         try {
-            session.update(aluno);
-            session.flush();
+            session.update(professor);
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao alterar o aluno!!");
-            t.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-    @Override
-    public void deletar(Aluno aluno) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
-
-        try {
-            session.delete(aluno);
-            t.commit();
-        } catch (Exception e) {
-            System.out.println("Erro ao deletar o Aluno");
+            System.out.println("Erro ao Alterar Professor");
             t.rollback();
 
         } finally {
@@ -119,36 +90,53 @@ public class AlunoHibernate implements AlunoDao {
     }
 
     @Override
-    public List<Aluno> recuperarTodos() {
+    public void deletar(Professor professor) {
         Session session = this.sessions.openSession();
-        List<Aluno> alunos = new ArrayList();
-        try {
+        Transaction t = session.beginTransaction();
 
-            alunos = session.createQuery("FROM Aluno").list();
+        try {
+            session.delete(professor);
+            t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao recuperar a lista de alunos");
+            System.out.println("Erro ao deletar Professor");
+            t.rollback();
+
         } finally {
             session.close();
         }
+    }
 
-        return alunos;
+    @Override
+    public List<Professor> recuperarTodos() {
+        Session session = this.sessions.openSession();
+        List<Professor> professores = new ArrayList();
+        try {
+
+            professores = (List) session.createQuery("FROM Professor").list();
+        } catch (Exception e) {
+            System.out.println("deu Erro ao consultar lista de professores");
+        } finally {
+            session.close();
+        }
+        return professores;
 
     }
 
     @Override
-    public Aluno recuperarCpf(String cpf) {
+    public Professor recuperarCpf(String cpf) {
         Session session = this.sessions.openSession();
         try {
 
-            return (Aluno) session.getSession().createQuery("From Aluno Where cpf='" + cpf + "'").getResultList().get(0);
+            return (Professor) session.getSession().createQuery("From Professor Where cpf='" + cpf + "'").getResultList().get(0);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("CPF do aluno não encontrado!!");
+
+            System.out.println("CPF não encontrado!!");
             return null;
 
         } finally {
             //Fechamos a sessão
             session.close();
+
         }
     }
 }

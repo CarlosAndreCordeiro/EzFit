@@ -1,70 +1,70 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model.hibernate;
+package model.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
-import model.Dao.ProfessorDao;
-import model.Professor;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import model.Aluno;
+import model.DAO.AlunoDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-/**
- *
- * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
- */
+public class AlunoHibernate implements AlunoDao {
 
+    private EntityManager em;
+    private SessionFactory sessions;
+    private static AlunoHibernate instance = null;
 
-public class ProfessorHibernate implements ProfessorDao {
+    public static AlunoHibernate getInstance() {
 
-    private final SessionFactory sessions;
-    private static ProfessorHibernate instance = null;
-
-    public static ProfessorHibernate getInstance() {
         if (instance == null) {
-            instance = new ProfessorHibernate();
+            instance = new AlunoHibernate();
         }
+
         return instance;
     }
 
     @Override
-    public boolean logarProfessor(String login, String senha) {
+    public boolean logarAluno(String login, String senha) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
-    private ProfessorHibernate() {
+    public AlunoHibernate() {
+
         Configuration cfg = new Configuration().configure();
         this.sessions = cfg.buildSessionFactory();
     }
 
     @Override
-    public void adiciona(Professor professor) {
+    public void adiciona(Aluno aluno) {
         Session session = this.sessions.openSession();
         Transaction t = session.beginTransaction();
 
         try {
-            session.persist(professor);
+            session.persist(aluno);
             session.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao alterar Professor");
+            System.out.println("Erro ao adicionar o aluno!!");
             t.rollback();
+            e.printStackTrace();
         } finally {
             session.close();
         }
     }
 
     @Override
-    public Professor recuperar(int codigo) {
+    public Aluno recuperar(int codigo) {
         Session session = this.sessions.openSession();
         try {
-            return (Professor) session.getSession().createQuery("From Professor Where codigo=" + codigo).getResultList().get(0);
+
+            return (Aluno) session.getSession().createQuery("From Aluno Where codigo=" + codigo).getResultList().get(0);
+        }catch(Exception e){
+            System.out.println("Erro ao recuperar aluno pelo codigo!!");
+            return null;
         } finally {
             //Fechamos a sessão
             session.close();
@@ -72,16 +72,34 @@ public class ProfessorHibernate implements ProfessorDao {
     }
 
     @Override
-    public void alterar(Professor professor) {
+    public void alterar(Aluno aluno) {
 
         Session session = this.sessions.openSession();
         Transaction t = session.beginTransaction();
 
         try {
-            session.update(professor);
+            session.update(aluno);
+            session.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao Alterar Professor");
+            System.out.println("Erro ao alterar o aluno!!");
+            t.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void deletar(Aluno aluno) {
+        Session session = this.sessions.openSession();
+        Transaction t = session.beginTransaction();
+
+        try {
+            session.delete(aluno);
+            t.commit();
+        } catch (Exception e) {
+            System.out.println("Erro ao deletar o Aluno");
             t.rollback();
 
         } finally {
@@ -90,53 +108,36 @@ public class ProfessorHibernate implements ProfessorDao {
     }
 
     @Override
-    public void deletar(Professor professor) {
+    public List<Aluno> recuperarTodos() {
         Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
-
+        List<Aluno> alunos = new ArrayList();
         try {
-            session.delete(professor);
-            t.commit();
-        } catch (Exception e) {
-            System.out.println("Erro ao deletar Professor");
-            t.rollback();
 
+            alunos = session.createQuery("FROM Aluno").list();
+        } catch (Exception e) {
+            System.out.println("Erro ao recuperar a lista de alunos");
         } finally {
             session.close();
         }
-    }
 
-    @Override
-    public List<Professor> recuperarTodos() {
-        Session session = this.sessions.openSession();
-        List<Professor> professores = new ArrayList();
-        try {
-
-            professores = (List) session.createQuery("FROM Professor").list();
-        } catch (Exception e) {
-            System.out.println("deu Erro ao consultar lista de professores");
-        } finally {
-            session.close();
-        }
-        return professores;
+        return alunos;
 
     }
 
     @Override
-    public Professor recuperarCpf(String cpf) {
+    public Aluno recuperarCpf(String cpf) {
         Session session = this.sessions.openSession();
         try {
 
-            return (Professor) session.getSession().createQuery("From Professor Where cpf='" + cpf + "'").getResultList().get(0);
+            return (Aluno) session.getSession().createQuery("From Aluno Where cpf='" + cpf + "'").getResultList().get(0);
         } catch (Exception e) {
-
-            System.out.println("CPF não encontrado!!");
+            e.printStackTrace();
+            System.out.println("CPF do aluno não encontrado!!");
             return null;
 
         } finally {
             //Fechamos a sessão
             session.close();
-
         }
     }
 }

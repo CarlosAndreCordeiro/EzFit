@@ -1,25 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package model;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-/**
- *
- * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
- */
+
+@Entity
 public class Aluno extends Pessoa {
-
-    
+   
     @Column(length = 50)
     private String objetivo;
     @Column 
@@ -34,8 +29,8 @@ public class Aluno extends Pessoa {
     public Aluno(){
     }
 
-
-
+    
+    
     public Aluno(String objetivo, double altura, double peso, List<Treino> treinos, String cpf, String nome, String endereco, String sexo, String dataNascimento, String email, String senha) {
         super(cpf, nome, endereco, sexo, dataNascimento, email, senha);
         this.objetivo = objetivo;
@@ -77,12 +72,17 @@ public class Aluno extends Pessoa {
     }
 
     @Override
+    public String toString() {
+        return "Aluno{" + "objetivo=" + objetivo + ", altura=" + altura + ", peso=" + peso + ", treinos=" + treinos + '}';
+    }
+
+    @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 37 * hash + Objects.hashCode(this.objetivo);
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.altura) ^ (Double.doubleToLongBits(this.altura) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.peso) ^ (Double.doubleToLongBits(this.peso) >>> 32));
-        hash = 37 * hash + Objects.hashCode(this.treinos);
+        int hash = 3;
+        hash = 71 * hash + Objects.hashCode(this.objetivo);
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.altura) ^ (Double.doubleToLongBits(this.altura) >>> 32));
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.peso) ^ (Double.doubleToLongBits(this.peso) >>> 32));
+        hash = 71 * hash + Objects.hashCode(this.treinos);
         return hash;
     }
 
@@ -113,10 +113,6 @@ public class Aluno extends Pessoa {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Aluno{" + "objetivo=" + objetivo + ", altura=" + altura + ", peso=" + peso + ", treinos=" + treinos + '}';
-    }
     
     
     

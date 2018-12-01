@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package model.hibernate;
+package model.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import model.Dao.ExercicioDao;
+import model.DAO.ExercicioDao;
 import model.Exercicio;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -37,7 +37,7 @@ public class ExercicioHibernate implements ExercicioDao {
         return instance;
     }
 
-     private ExercicioHibernate() {
+     public ExercicioHibernate() {
 
         Configuration cfg = new Configuration().configure();
         this.sessions = cfg.buildSessionFactory();

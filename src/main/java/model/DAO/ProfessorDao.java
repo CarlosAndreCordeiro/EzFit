@@ -4,17 +4,16 @@
  * and open the template in the editor.
  */
 
-package model.Dao;
+package model.DAO;
 
-import model.Treino;
+import model.Professor;
 
 /**
  *
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
-public interface TreinoDao extends DaoGenerico<Treino> {
-
-    Treino recuperarNome(String nome);
-   
+public interface ProfessorDao extends DaoGenerico<Professor>{
+  
+    public boolean logarProfessor(String login,String senha); 
+    public Professor recuperarCpf(String cpf);
 }
-

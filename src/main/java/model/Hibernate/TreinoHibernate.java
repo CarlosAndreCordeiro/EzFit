@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package model.hibernate;
+package model.Hibernate;
 
-import model.Dao.TreinoDao;
+import model.DAO.TreinoDao;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -36,7 +36,7 @@ public class TreinoHibernate implements TreinoDao {
         return instance;
     }
 
-    private TreinoHibernate() {
+    public TreinoHibernate() {
 
         Configuration cfg = new Configuration().configure();
         this.sessions = cfg.buildSessionFactory();

@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.Dao;
 
-import model.Exercicio;
+package model.DAO;
+
+import model.Treino;
 
 /**
  *
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
+public interface TreinoDao extends DaoGenerico<Treino> {
 
-public interface ExercicioDao extends DaoGenerico<Exercicio>{
+    Treino recuperarNome(String nome);
    
-    public Exercicio recuperarNome(String nome);
 }
+
