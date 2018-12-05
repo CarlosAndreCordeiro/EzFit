@@ -1,4 +1,5 @@
-﻿-- Function: exerciciogatilho()
+﻿
+-- Function: exerciciogatilho()
 
 -- DROP FUNCTION exerciciogatilho();
 
@@ -13,19 +14,16 @@ $BODY$
         IF NEW.descricao IS NULL THEN
             RAISE EXCEPTION '% não pode ter um exercicio nulo', NEW.descricao;
         END IF;
-        --  
-      
-        --      
-        IF NEW.descricao = null THEN
-            RAISE EXCEPTION '% não pode ter um Nome nulo', NEW.descricao;
-        END IF;
+  
+     
      
         
         RETURN NEW;
     END;
   
  $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION exerciciogatilho()
-  OWNER TO postgres;
+  LANGUAGE plpgsql;
+
+  
+  CREATE TRIGGER exerciciogatilho BEFORE INSERT OR UPDATE ON exercicio
+    FOR EACH ROW EXECUTE PROCEDURE exerciciogatilho();
