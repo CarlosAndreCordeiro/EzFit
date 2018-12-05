@@ -37,26 +37,41 @@ public class Launch {
         AlunoHibernate ah = new AlunoHibernate();
         ProfessorHibernate ph = new ProfessorHibernate();
         
-        Exercicio e = new Exercicio( "quebra cu"+ gerador.nextInt(1000), "descricao");
+        Exercicio e = new Exercicio( "quebra peito"+ gerador.nextInt(1000), "descricao");
+        Exercicio e2 = new Exercicio( "quebra custela"+ gerador.nextInt(1000), "descricao");
+        eh.adiciona(e2);
+        eh.adiciona(e);
         
-       exercicios.add(e);
-        eh.adiciona(e);      
+        exercicios.add(e);
+        exercicios.add(e2);
+        
+        
+        Professor p = new Professor("cref", "cpf111", "nome", "endereco", "sexo", "mento", "email", "s");
+        
+        ph.adiciona(p);
+        p=ph.recuperarCpf("cpf111");
+        
+        Aluno a = new Aluno("objetivo", 0, 0, null, "cpf222", "nome","endereco", "sexo", "ento"," email", "senha");
+        ah.adiciona(a);
+        a = ah.recuperarCpf("cpf222");
        
-          
+        
+        Treino t = new Treino("treino1", "descricao", 0, p, "sid", exercicios, a);
+        Treino t2 = new Treino("treino2", "descricao", 0, p, "sid", exercicios, a);
+        
+        th.adiciona(t);
+        th.adiciona(t2);
+        
+        treinos.add(t);
+        treinos.add(t2);
+        
+        a=ah.recuperarCpf("cpf222");
+        a.setTreinos(treinos);
+        ah.alterar(a);
+             
+        
            
-        
-        
-        
-        
-        Aluno a = new Aluno("objetivo", 0, 0,treinos , "cpf" + gerador.nextInt(1000)," nome", "endereco", "sexo", "00"," email", "senha");
-             ah.adiciona(a); 
-        Professor p = new Professor("cref", "cpf" + gerador.nextInt(1000), "nome", "endereco", "sexo", "22/02/2018", "email", "senha");
-           ph.adiciona(p);    
-        Treino t = new Treino("nome do treino", "descricaodo treino", 10, p, "intensidade", exercicios, a);
-         th.adiciona(t);   
-        
-        
-      
+           
         
         
      

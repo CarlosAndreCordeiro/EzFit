@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
@@ -50,7 +51,7 @@ public class Treino {
     private String intensidade;    
     
 
-    @ManyToMany (fetch = FetchType.EAGER)
+    @OneToMany (fetch = FetchType.EAGER)
     private List<Exercicio> exercicios;
     
     @ManyToOne
