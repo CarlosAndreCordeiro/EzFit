@@ -6,11 +6,8 @@ Aplicativo focado em potencializar o desempenho físico para atletas de alto ren
 
 ## RELATÓRIO DE REQUISITO
 
-## Resumo
-Este documento diz quais são os requisitos de sistema e o que deve atender das especificações nele implementado para suprir as necessidades de um atleta e educador físico. EzFit é uma solução que promete potencializar seus resultados seja ele em qual for sua modalidade. 
-
-
 ## Descrição geral do Sistema
+Este documento diz quais são os requisitos de sistema e o que deve atender das especificações nele implementado para suprir as necessidades de um atleta e educador físico. EzFit é uma solução que promete potencializar seus resultados seja ele em qual for sua modalidade. 
 É um sistema Android/web. Onde cada usuário tem um canal direto com profissionais da área  de educação física. Elerá desenvolvido em linguagem Java/html, fará uso do Banco de Dados PostgreSQL.
 
 
