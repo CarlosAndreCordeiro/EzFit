@@ -6,7 +6,7 @@ Aplicativo focado em potencializar o desempenho físico para atletas de alto ren
 
 ## RELATÓRIO DE REQUISITO
 
-## Inovação
+## Resumo
 Este documento diz quais são os requisitos de sistema e o que deve atender das especificações nele implementado para suprir as necessidades de um atleta e educador físico. EzFit é uma solução que promete potencializar seus resultados seja ele em qual for sua modalidade. 
 
 
