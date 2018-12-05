@@ -6,6 +6,7 @@
 
 package model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,10 +29,12 @@ public class Professor extends Pessoa{
 
     
 
-    public Professor(String cref, String cpf, String nome, String endereco, String sexo, String dataNascimento, String email, String senha) {
+    public Professor(String cref, String cpf, String nome, String endereco, String sexo, LocalDate dataNascimento, String email, String senha) {
         super(cpf, nome, endereco, sexo, dataNascimento, email, senha);
         this.cref = cref;
     }
+
+    
 
     public String getCref() {
         return cref;

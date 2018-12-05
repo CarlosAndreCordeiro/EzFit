@@ -1,4 +1,5 @@
 package model;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +32,9 @@ public class Aluno extends Pessoa {
 
     
     
-    public Aluno(String objetivo, double altura, double peso, List<Treino> treinos, String cpf, String nome, String endereco, String sexo, String dataNascimento, String email, String senha) {
+
+
+    public Aluno(String objetivo, double altura, double peso, List<Treino> treinos, String cpf, String nome, String endereco, String sexo, LocalDate dataNascimento, String email, String senha) {
         super(cpf, nome, endereco, sexo, dataNascimento, email, senha);
         this.objetivo = objetivo;
         this.altura = altura;

@@ -2,6 +2,7 @@ package model;
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +30,7 @@ public abstract class Pessoa implements Serializable{
     @Column(length = 10)
     private String sexo;
     @Column(length = 10)
-    private String dataNascimento;
+    private LocalDate dataNascimento;
     @Column(length = 30)
     private String email;
     @Column(length = 20)
@@ -38,8 +39,8 @@ public abstract class Pessoa implements Serializable{
     public Pessoa() {
     }
 
-    public Pessoa( String cpf, String nome, String endereco, String sexo, String dataNascimento, String email, String senha) {
-        
+    public Pessoa( String cpf, String nome, String endereco, String sexo, LocalDate dataNascimento, String email, String senha) {
+       
         this.cpf = cpf;
         this.nome = nome;
         this.endereco = endereco;
@@ -49,11 +50,10 @@ public abstract class Pessoa implements Serializable{
         this.senha = senha;
     }
 
+
     public int getCodigo() {
         return codigo;
     }
-
-
 
     public String getCpf() {
         return cpf;
@@ -87,11 +87,11 @@ public abstract class Pessoa implements Serializable{
         this.sexo = sexo;
     }
 
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -113,15 +113,15 @@ public abstract class Pessoa implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 43 * hash + this.codigo;
-        hash = 43 * hash + Objects.hashCode(this.cpf);
-        hash = 43 * hash + Objects.hashCode(this.nome);
-        hash = 43 * hash + Objects.hashCode(this.endereco);
-        hash = 43 * hash + Objects.hashCode(this.sexo);
-        hash = 43 * hash + Objects.hashCode(this.dataNascimento);
-        hash = 43 * hash + Objects.hashCode(this.email);
-        hash = 43 * hash + Objects.hashCode(this.senha);
+        int hash = 7;
+        hash = 31 * hash + this.codigo;
+        hash = 31 * hash + Objects.hashCode(this.cpf);
+        hash = 31 * hash + Objects.hashCode(this.nome);
+        hash = 31 * hash + Objects.hashCode(this.endereco);
+        hash = 31 * hash + Objects.hashCode(this.sexo);
+        hash = 31 * hash + Objects.hashCode(this.dataNascimento);
+        hash = 31 * hash + Objects.hashCode(this.email);
+        hash = 31 * hash + Objects.hashCode(this.senha);
         return hash;
     }
 
@@ -152,13 +152,13 @@ public abstract class Pessoa implements Serializable{
         if (!Objects.equals(this.sexo, other.sexo)) {
             return false;
         }
-        if (!Objects.equals(this.dataNascimento, other.dataNascimento)) {
-            return false;
-        }
         if (!Objects.equals(this.email, other.email)) {
             return false;
         }
         if (!Objects.equals(this.senha, other.senha)) {
+            return false;
+        }
+        if (!Objects.equals(this.dataNascimento, other.dataNascimento)) {
             return false;
         }
         return true;
@@ -169,6 +169,6 @@ public abstract class Pessoa implements Serializable{
         return "Pessoa{" + "codigo=" + codigo + ", cpf=" + cpf + ", nome=" + nome + ", endereco=" + endereco + ", sexo=" + sexo + ", dataNascimento=" + dataNascimento + ", email=" + email + ", senha=" + senha + '}';
     }
 
-    
 
+    
 }
