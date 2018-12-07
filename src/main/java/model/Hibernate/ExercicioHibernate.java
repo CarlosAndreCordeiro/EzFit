@@ -9,12 +9,10 @@ package model.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import model.DAO.ExercicioDao;
 import model.Exercicio;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+
 
 
 
@@ -25,120 +23,119 @@ import org.hibernate.cfg.Configuration;
 
 public class ExercicioHibernate implements ExercicioDao {
 
-    private EntityManager em;
-    private SessionFactory sessions;
-    private static ExercicioHibernate instance = null;
+    
+    public ExercicioHibernate() {}
 
-    public static ExercicioHibernate getInstance() {
-
-        if (instance == null) {
-            instance = new ExercicioHibernate();
-        }
-        return instance;
-    }
-
-     public ExercicioHibernate() {
-
-        Configuration cfg = new Configuration().configure();
-        this.sessions = cfg.buildSessionFactory();
-    }
-     
+    
     @Override
     public void adiciona(Exercicio exercicio) {
-    Session session = this.sessions.openSession();
-    Transaction t = session.beginTransaction();
-        try{
-            session.persist(exercicio);
-            session.flush();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
+
+        try {
+            t.begin();
+            em.persist(exercicio);
+            em.flush();
             t.commit();
-        }catch (Exception e){
-            System.out.println("deu Erro ao Adicionar exercicio ");
+        } catch (Exception e) {
+            System.out.println("Erro ao adicionar o exercicio!!");
             t.rollback();
-        } finally{
-            session.close();
+            e.printStackTrace();
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public Exercicio recuperar(int codigo) {
-    Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
         try {
-            return (Exercicio) session.getSession().createQuery(
-                    "From Exercicio Where codigo=" + codigo).getResultList().get(0);
 
+            return (Exercicio) em.createQuery("From Exercicio Where codigo=" + codigo).getResultList().get(0);
+        }catch(Exception e){
+            System.out.println("Erro ao recuperar Exercicio pelo codigo!!");
+            return null;
         } finally {
             //Fechamos a sessão
-            session.close();
-        }    
+            em.close();
+        }
     }
-
+    
+    
     @Override
+    
     public void alterar(Exercicio exercicio) {
-             Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+         EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
-        try {
-            session.update(exercicio);
+       try {
+            t.begin();
+            em.merge(exercicio);
+            em.flush();
             t.commit();
-        } catch (Exception e ) {
-            System.out.println("deu merda ao alterar exercicio");
+        } catch (Exception e) {
+            System.out.println("Erro ao alterar o exercicio!!");
             t.rollback();
-
+            e.printStackTrace();
         } finally {
-            session.close();
-        }    
+            em.close();
+        }
     }
 
-    @Override
+    
+     @Override
     public void deletar(Exercicio exercicio) {
-         Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.delete(exercicio);
+            t.begin();
+            em.remove(exercicio);
             t.commit();
-        } catch (Exception e ) {
-            System.out.println("Deu erro ao deletar exercicio");
+        } catch (Exception e) {
+            System.out.println("Erro ao deletar o exercicio");
             t.rollback();
 
         } finally {
-            session.close();
+            em.close();
         }
     }
 
-    @Override
-    public List recuperarTodos() {
-     Session session = this.sessions.openSession();
-        List<Exercicio> exercicios = new ArrayList();
-        try {
 
-            exercicios = session.createQuery("FROM Exercicio").list();
-        } catch (Exception e) {
-            System.out.println("deu Erro ao consultar lista de Exercícios");
-        } finally {
-            session.close();
-        }
-        return exercicios;
-
-     }
-
-    @Override
+    
+     @Override
     public Exercicio recuperarNome(String nome) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        
         try {
 
-            return (Exercicio) session.getSession().createQuery("From Exercicio Where nome='" + nome+ "'").getResultList().get(0);
+            return (Exercicio) em.createQuery("From Exercicio Where nome='" + nome + "'").getResultList().get(0);
         } catch (Exception e) {
-
-            System.out.println("CPF não encontrado!!");
+            e.printStackTrace();
+            System.out.println("Nome do exercicio não encontrado!!");
             return null;
 
         } finally {
             //Fechamos a sessão
-            session.close();
+            em.close();
         }
     }
+
+    @Override
+    public List<Exercicio> recuperarTodos() {
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        List<Exercicio> exercicios = new ArrayList();
+        try {
+
+            exercicios = em.createQuery("FROM Exercicio").getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao recuperar a lista de Exercicios");
+        } finally {
+            em.close();
+        }
+
+        return exercicios;
+
+    }
+    
 }
-
-
-

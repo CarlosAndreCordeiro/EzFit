@@ -6,15 +6,13 @@
 
 package model.Hibernate;
 
-import model.DAO.TreinoDao;
 import java.util.ArrayList;
 import java.util.List;
+import model.DAO.TreinoDao;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
 import model.Treino;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 /**
  *
@@ -23,117 +21,120 @@ import org.hibernate.cfg.Configuration;
 
 public class TreinoHibernate implements TreinoDao {
 
-    private EntityManager em;
-    private SessionFactory sessions;
-    private static TreinoHibernate instance = null;
+   
+    
+    public TreinoHibernate() {}
 
-    public static TreinoHibernate getInstance() {
-
-        if (instance == null) {
-            instance = new TreinoHibernate();
-        }
-
-        return instance;
-    }
-
-    public TreinoHibernate() {
-
-        Configuration cfg = new Configuration().configure();
-        this.sessions = cfg.buildSessionFactory();
-    }
-
+    
     @Override
     public void adiciona(Treino treino) {
-
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.persist(treino);
+            t.begin();
+            em.persist(treino);
+            em.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("erro ao adicionar Treino");
+            System.out.println("Erro ao adicionar o treino!!");
             t.rollback();
-
+            e.printStackTrace();
         } finally {
-            session.close();
+            em.close();
         }
-
     }
 
     @Override
     public Treino recuperar(int codigo) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
         try {
 
-            return (Treino) session.getSession().createQuery("From Treino Where codigo=" + codigo).getResultList().get(0);
-
+            return (Treino) em.createQuery("From Treino Where codigo=" + codigo).getResultList().get(0);
+        }catch(Exception e){
+            System.out.println("Erro ao recuperar Treino pelo codigo!!");
+            return null;
         } finally {
             //Fechamos a sessão
-            session.close();
+            em.close();
         }
     }
-
+    
+    
     @Override
+    
     public void alterar(Treino treino) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+         EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
-        try {
-            session.update(treino);
-            t.commit();
-        } finally {
-            session.close();
-        }
-    }
-
-    @Override
-    public void deletar(Treino treino) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
-
-        try {
-            session.delete(treino);
+       try {
+            t.begin();
+            em.merge(treino);
+            em.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("erro ao deletar Treino");
+            System.out.println("Erro ao alterar o treino!!");
             t.rollback();
+            e.printStackTrace();
         } finally {
-            session.close();
+            em.close();
         }
     }
 
-    @Override
-    public List<Treino> recuperarTodos() {
-        Session session = this.sessions.openSession();
-        List<Treino> treinos = new ArrayList();
+    
+     @Override
+    public void deletar(Treino treino) {
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            treinos = session.createQuery("FROM Treino").list();
+            t.begin();
+            em.remove(treino);
+            t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao Recuperar Treinos");
+            System.out.println("Erro ao deletar o treino");
+            t.rollback();
 
         } finally {
-            session.close();
+            em.close();
         }
-
-        return treinos;
     }
 
-    @Override
+
+    
+     @Override
     public Treino recuperarNome(String nome) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        
         try {
 
-            return (Treino) session.getSession().createQuery("From Treino Where nome='" + nome+ "'").getResultList().get(0);
+            return (Treino) em.createQuery("From Treino Where nome='" + nome + "'").getResultList().get(0);
         } catch (Exception e) {
-
+            e.printStackTrace();
             System.out.println("Nome do treino não encontrado!!");
             return null;
 
         } finally {
             //Fechamos a sessão
-            session.close();
+            em.close();
         }
     }
+
+    @Override
+    public List<Treino> recuperarTodos() {
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        List<Treino> treinos = new ArrayList();
+        try {
+
+            treinos = em.createQuery("FROM Treino").getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao recuperar a lista de Treinos");
+        } finally {
+            em.close();
+        }
+
+        return treinos;
+
+    }
+    
 }

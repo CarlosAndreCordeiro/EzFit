@@ -12,7 +12,7 @@ import model.Treino;
  *
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
-public interface TreinoDao extends DaoGenerico<Treino> {
+public interface TreinoDao extends DAOGenerico<Treino> {
 
     Treino recuperarNome(String nome);
    

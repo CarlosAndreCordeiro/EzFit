@@ -38,7 +38,7 @@ public class Launch {
         ProfessorHibernate ph = new ProfessorHibernate();
         
         
-        for(int i = 0 ; i<1; i++){
+        for(int i = 0 ; i<10; i++){
             Exercicio e = new Exercicio( "quebra peito nulo"+ gerador.nextInt(1000), "descricao666");
             Exercicio e2 = new Exercicio( "quebra custela"+ gerador.nextInt(1000), "descricao");
             eh.adiciona(e2);
@@ -86,20 +86,20 @@ public class Launch {
         ah.alterar(a);
           
         
-//           for (int i = 0; i<1; i++){
-//               
-//               Aluno aa = new Aluno("objetivo", 0, 0, null, 
-//                       "cpf222" + gerador.nextInt(1000), "nome","endereco", 
-//                       "sexo", LocalDate.of(1982, 03, 22)," email", "senha");
-//               ah.adiciona(aa);
-//               
-//               Professor pp = new Professor("cref", 
-//                       "cpf111"+ gerador.nextInt(1000), "nome", "endereco", 
-//                       "sexo", LocalDate.of(1982, 03, 22), "email", "s");
-//               ph.adiciona(pp);
-//           }
-//           
-//        
+           for (int i = 0; i<10; i++){
+               
+               Aluno aa = new Aluno("objetivo", 0, 0, null, 
+                       "cpf222" + gerador.nextInt(1000), "nome","endereco", 
+                       "sexo", LocalDate.of(1982, 03, 22)," email", "senha");
+               ah.adiciona(aa);
+               
+               Professor pp = new Professor("cref", 
+                       "cpf111"+ gerador.nextInt(1000), "nome", "endereco", 
+                       "sexo", LocalDate.of(1982, 03, 22), "email", "s");
+               ph.adiciona(pp);
+           }
+           
+        
         
      
         

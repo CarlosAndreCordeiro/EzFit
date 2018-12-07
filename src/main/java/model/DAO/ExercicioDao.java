@@ -12,7 +12,7 @@ import model.Exercicio;
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
 
-public interface ExercicioDao extends DaoGenerico<Exercicio>{
+public interface ExercicioDao extends DAOGenerico<Exercicio>{
    
     public Exercicio recuperarNome(String nome);
 }

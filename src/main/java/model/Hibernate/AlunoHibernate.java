@@ -3,28 +3,11 @@ package model.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import model.Aluno;
 import model.DAO.AlunoDao;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 public class AlunoHibernate implements AlunoDao {
-
-    private EntityManager em;
-    private SessionFactory sessions;
-    private static AlunoHibernate instance = null;
-
-    public static AlunoHibernate getInstance() {
-
-        if (instance == null) {
-            instance = new AlunoHibernate();
-        }
-
-        return instance;
-    }
 
     @Override
     public boolean logarAluno(String login, String senha) {
@@ -32,92 +15,91 @@ public class AlunoHibernate implements AlunoDao {
 
     }
 
-    public AlunoHibernate() {
-
-        Configuration cfg = new Configuration().configure();
-        this.sessions = cfg.buildSessionFactory();
-    }
+    public AlunoHibernate() { }
 
     @Override
     public void adiciona(Aluno aluno) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.persist(aluno);
-            session.flush();
+            t.begin();
+            em.persist(aluno);
+            em.flush();
             t.commit();
         } catch (Exception e) {
             System.out.println("Erro ao adicionar o aluno!!");
             t.rollback();
             e.printStackTrace();
         } finally {
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public Aluno recuperar(int codigo) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
         try {
 
-            return (Aluno) session.getSession().createQuery("From Aluno Where codigo=" + codigo).getResultList().get(0);
+            return (Aluno) em.createQuery("From Aluno Where codigo=" + codigo).getResultList().get(0);
         }catch(Exception e){
             System.out.println("Erro ao recuperar aluno pelo codigo!!");
             return null;
         } finally {
             //Fechamos a sessão
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public void alterar(Aluno aluno) {
 
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.update(aluno);
-            session.flush();
+            t.begin();
+            em.merge(aluno);
+            em.flush();
             t.commit();
         } catch (Exception e) {
             System.out.println("Erro ao alterar o aluno!!");
             t.rollback();
             e.printStackTrace();
         } finally {
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public void deletar(Aluno aluno) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.delete(aluno);
+            t.begin();
+            em.remove(aluno);
             t.commit();
         } catch (Exception e) {
             System.out.println("Erro ao deletar o Aluno");
             t.rollback();
 
         } finally {
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public List<Aluno> recuperarTodos() {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
         List<Aluno> alunos = new ArrayList();
         try {
 
-            alunos = session.createQuery("FROM Aluno").list();
+            alunos = em.createQuery("FROM Aluno").getResultList();
         } catch (Exception e) {
             System.out.println("Erro ao recuperar a lista de alunos");
         } finally {
-            session.close();
+            em.close();
         }
 
         return alunos;
@@ -126,10 +108,11 @@ public class AlunoHibernate implements AlunoDao {
 
     @Override
     public Aluno recuperarCpf(String cpf) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        
         try {
 
-            return (Aluno) session.getSession().createQuery("From Aluno Where cpf='" + cpf + "'").getResultList().get(0);
+            return (Aluno) em.createQuery("From Aluno Where cpf='" + cpf + "'").getResultList().get(0);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("CPF do aluno não encontrado!!");
@@ -137,7 +120,7 @@ public class AlunoHibernate implements AlunoDao {
 
         } finally {
             //Fechamos a sessão
-            session.close();
+            em.close();
         }
     }
 }

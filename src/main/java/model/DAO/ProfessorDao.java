@@ -12,7 +12,7 @@ import model.Professor;
  *
  * @author $Carlos Cordeiro <carloscordeiroconsultor@gmail.com>
  */
-public interface ProfessorDao extends DaoGenerico<Professor>{
+public interface ProfessorDao extends DAOGenerico<Professor>{
   
     public boolean logarProfessor(String login,String senha); 
     public Professor recuperarCpf(String cpf);

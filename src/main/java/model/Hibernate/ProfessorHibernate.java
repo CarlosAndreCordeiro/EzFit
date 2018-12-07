@@ -8,12 +8,11 @@ package model.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import model.DAO.ProfessorDao;
 import model.Professor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+
 
 /**
  *
@@ -23,120 +22,118 @@ import org.hibernate.cfg.Configuration;
 
 public class ProfessorHibernate implements ProfessorDao {
 
-    private final SessionFactory sessions;
-    private static ProfessorHibernate instance = null;
-
-    public static ProfessorHibernate getInstance() {
-        if (instance == null) {
-            instance = new ProfessorHibernate();
-        }
-        return instance;
-    }
-
-    @Override
+ @Override
     public boolean logarProfessor(String login, String senha) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
-    public ProfessorHibernate() {
-        Configuration cfg = new Configuration().configure();
-        this.sessions = cfg.buildSessionFactory();
-    }
+    public ProfessorHibernate() { }
 
     @Override
     public void adiciona(Professor professor) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.persist(professor);
-            session.flush();
+            t.begin();
+            em.persist(professor);
+            em.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao alterar Professor");
+            System.out.println("Erro ao adicionar o professor!!");
             t.rollback();
+            e.printStackTrace();
         } finally {
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public Professor recuperar(int codigo) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
         try {
-            return (Professor) session.getSession().createQuery("From Professor Where codigo=" + codigo).getResultList().get(0);
+
+            return (Professor) em.createQuery("From Professor Where codigo=" + codigo).getResultList().get(0);
+        }catch(Exception e){
+            System.out.println("Erro ao recuperar professor pelo codigo!!");
+            return null;
         } finally {
             //Fechamos a sessão
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public void alterar(Professor professor) {
 
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.update(professor);
+            t.begin();
+            em.merge(professor);
+            em.flush();
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao Alterar Professor");
+            System.out.println("Erro ao alterar o professor!!");
             t.rollback();
-
+            e.printStackTrace();
         } finally {
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public void deletar(Professor professor) {
-        Session session = this.sessions.openSession();
-        Transaction t = session.beginTransaction();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        EntityTransaction t = em.getTransaction();
 
         try {
-            session.delete(professor);
+            t.begin();
+            em.remove(professor);
             t.commit();
         } catch (Exception e) {
-            System.out.println("Erro ao deletar Professor");
+            System.out.println("Erro ao deletar o Professor");
             t.rollback();
 
         } finally {
-            session.close();
+            em.close();
         }
     }
 
     @Override
     public List<Professor> recuperarTodos() {
-        Session session = this.sessions.openSession();
-        List<Professor> professores = new ArrayList();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        List<Professor> professors = new ArrayList();
         try {
 
-            professores = (List) session.createQuery("FROM Professor").list();
+            professors = em.createQuery("FROM Professor").getResultList();
         } catch (Exception e) {
-            System.out.println("deu Erro ao consultar lista de professores");
+            System.out.println("Erro ao recuperar a lista de professors");
         } finally {
-            session.close();
+            em.close();
         }
-        return professores;
+
+        return professors;
 
     }
 
     @Override
     public Professor recuperarCpf(String cpf) {
-        Session session = this.sessions.openSession();
+        EntityManager em = JPAManager.getInstance().getEntityManager();
+        
         try {
 
-            return (Professor) session.getSession().createQuery("From Professor Where cpf='" + cpf + "'").getResultList().get(0);
+            return (Professor) em.createQuery("From Professor Where cpf='" + cpf + "'").getResultList().get(0);
         } catch (Exception e) {
-
-            System.out.println("CPF não encontrado!!");
+            e.printStackTrace();
+            System.out.println("CPF do professor não encontrado!!");
             return null;
 
         } finally {
             //Fechamos a sessão
-            session.close();
-
+            em.close();
         }
     }
 }
